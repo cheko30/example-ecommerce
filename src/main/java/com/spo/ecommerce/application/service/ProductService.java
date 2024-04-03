@@ -27,12 +27,23 @@ public class ProductService {
     }
 
     public Product saveProduct(Product product) {
-        User user = new User();
-        user.setId(1);
-        product.setDateCreated(LocalDateTime.now());
-        product.setDateUpdated(LocalDateTime.now());
-        product.setUser(user);
-        return productRepository.saveProduct(product);
+        if(product.getId() == null) {
+            User user = new User();
+            user.setId(1);
+            product.setDateCreated(LocalDateTime.now());
+            product.setDateUpdated(LocalDateTime.now());
+            product.setUser(user);
+            return productRepository.saveProduct(product);
+        } else {
+            Product productUpdated = productRepository.getProductById(product.getId());
+            product.setCode(productUpdated.getCode());
+            product.setUser(productUpdated.getUser());
+            product.setDateCreated(productUpdated.getDateCreated());
+            product.setDateUpdated(LocalDateTime.now());
+
+            return productRepository.saveProduct(product);
+        }
+
     }
 
     public void deleteProductById(Integer id) {

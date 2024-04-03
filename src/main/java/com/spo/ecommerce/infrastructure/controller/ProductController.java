@@ -6,9 +6,7 @@ import com.spo.ecommerce.domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -42,5 +40,20 @@ public class ProductController {
         Iterable<Product> products = productService.getProductsByUser(user);
         model.addAttribute("products", products);
         return "admin/products/show";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String editProduct(@PathVariable Integer id, Model model) {
+        Product product = productService.getProductById(id);
+        log.info("Get product {}", product);
+        model.addAttribute("product", product);
+
+        return "admin/products/edit";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Integer id) {
+        productService.deleteProductById(id);
+        return "redirect:/admin/products/show";
     }
 }
